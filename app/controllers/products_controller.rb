@@ -2,7 +2,7 @@ class ProductsController < ApplicationController
 	before_action :authorize, except: [:index]
 	# Get
 	def index
-		render json: Product.all
+		render json: Product.all.order(quantity: :desc)
 	end
 
 	# Get/:id
@@ -19,18 +19,19 @@ class ProductsController < ApplicationController
 	end
 
 	# Patch
-	def updated
+	def update
 		products = Product.find(params[:id])
-		products.update!(user_id:user.id, name: product_params[:name], price: product_params[:price], quantity: product_params[:quantity], sold: product_params[:sold], added: product_params[:added])
-		render json: products, status: :updated
+		products.update!(name: product_params[:name], price: product_params[:price], quantity: product_params[:quantity], sold: product_params[:sold], added: product_params[:added])
+		render json: products
 	end
 
 	# Delete
 	def destroy
 		product = Product.find(params[:id])
 		product.destroy
-		render json: []
+		render json: {}
 	end
+
 private
 	def product_params
 		params.permit(:name, :price, :quantity, :sold, :added)

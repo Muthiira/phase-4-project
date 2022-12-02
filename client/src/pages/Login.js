@@ -9,7 +9,7 @@ function Login({ onLogin }) {
 
   return (
     <Wrapper>
-      <Logo>Products</Logo>
+      <Logo>Welcome</Logo>
       {showLogin ? (
         <>
           <LoginForm onLogin={onLogin} />
@@ -38,9 +38,9 @@ function Login({ onLogin }) {
 }
 
 const Logo = styled.h1`
-  font-family: "Permanent Marker", cursive;
+  font-family: "Abyssinica SIL";
   font-size: 3rem;
-  color: deeppink;
+  color: navy;
   margin: 8px 0 16px;
 `;
 

@@ -1,17 +1,27 @@
 import { useEffect, useState } from "react";
-import ReactMarkdown from "react-markdown";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Box, Button } from "../styles";
+import {  Delete } from "./crud";
 
-function ProductList() {
+function ProductList({ update}) {
   const [products, setProducts] = useState([]);
-
+  
   useEffect(() => {
     fetch("/products")
       .then((r) => r.json())
       .then(setProducts);
   }, []);
+
+function onDelete(id) {
+  Delete(id).then(resp => {
+    const index = products.findIndex(r => r.id === id);
+    console.log(index)
+    let latestUpdate = [...products];
+    latestUpdate.splice(index, 1);
+    setProducts(latestUpdate);
+  })
+}
 
   return (
     <Wrapper>
@@ -25,7 +35,10 @@ function ProductList() {
                 {/* <cite>By {product.user.username}</cite> */}
               </p>
 			  <p>PRICE : {product.price}</p>
-              <ReactMarkdown>{product.price}</ReactMarkdown>
+              {/* <ReactMarkdown>{product.price}</ReactMarkdown> */}
+			  <Button color="primary" type="delete" onClick={() =>onDelete(product.id)}>DELETE</Button>
+		
+			  <Button color="primary" type="update" onClick={() => update(product)}>UPDATE</Button>
             </Box>
           </Recipe>
         ))

@@ -1,104 +1,120 @@
 import { useState } from "react";
 import { useHistory } from "react-router";
 import styled from "styled-components";
-import ReactMarkdown from "react-markdown";
+import { Post, Patch } from "./crud";
 import { Button,Error, FormField, Input, Label } from "../styles";
 
-function NewProduct({ user }) {
-  const [name, setName] = useState("Product");
-  const [price, setPrice] = useState([]);
-  const [quantity, setQuantity] = useState([]);
-  const [errors, setErrors] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  
+export default function NewProduct ({onSaved, defaultData }) {
   const history = useHistory();
+	// deriving input values from state(making it controlled)
+	const [formData, setFormData] = useState({
+		name: defaultData ? defaultData.name : "",
+		quantity: defaultData ? defaultData.quantity : "",
+		price: defaultData ? defaultData.price : ""
+	});
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    setIsLoading(true);
-    fetch("/recipes", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name,
-        price,
-        quantity: quantity,
-      }),
-    }).then((r) => {
-      setIsLoading(false);
-      if (r.ok) {
+	// including loader
+	const [saving, setSaving] = useState(false)
+
+	// function that handles change
+	function handleChange(event) {
+		setFormData({
+			...formData,
+			[event.target.name]: event.target.value
+		})
+	}
+
+	// update function on submission
+	function addProduct(event) {
+		event.preventDefault();
+		setSaving(true)
+		// if defaultData is defined update,if not defined create
+		if (defaultData) {
+			Patch({ ...formData, id: defaultData.id }).then((updatedProduct) => {
+				setSaving(false);
+        onSaved(updatedProduct);
         history.push("/");
-      } else {
-        r.json().then((err) => setErrors(err.errors));
-      }
-    });
-  }
+				console.log(updatedProduct);
+        history.push("/");
+			})
+		} else {
+			Post(formData).then(newProduct => {
+				setSaving(false);
+        onSaved(newProduct);
+        history.push("/");
+				console.log(newProduct);
 
-  return (
+			});
+    }
+  }
+  return(
     <Wrapper>
       <WrapperChild>
         <h2>Create Product</h2>
-        <form onSubmit={handleSubmit}>
-          <FormField>
+        <form onSubmit={addProduct}>
+          <FormField >
             <Label htmlFor="name">Name</Label>
             <Input
               type="text"
               id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
             />
-          </FormField>
-          <FormField>
+          </FormField >
+          <FormField >
             <Label htmlFor="quantity">quantity</Label>
             <Input
               type="number"
               id="quantity"
-              value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
+              name="quantity"
+              value={formData.quantity}
+              onChange={handleChange}
             />
-          </FormField>
-          <FormField>
+          </FormField >
+          <FormField >
             <Label htmlFor="price">Price</Label>
             <Input
               id="price"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
             />
           </FormField>
           <FormField>
-            <Button color="primary" type="submit">
-              {isLoading ? "Loading..." : "Submit Recipe"}
+            <Button color="primary" type="submit" disabled={saving} >
+              {saving ? "Loading..." : "Submit Product"}
             </Button>
           </FormField>
-          <FormField>
+          {/* <FormField>
             {errors.map((err) => (
               <Error key={err}>{err}</Error>
             ))}
-          </FormField>
+          </FormField> */}
         </form>
       </WrapperChild>
-      <WrapperChild>
-        <h1>{name}</h1>
+      {/* <WrapperChild> */}
+        {/* <h1>{name}</h1>
         <p>
-          <em>quantity: {quantity}</em>
-        </p>
-        <ReactMarkdown>{price}</ReactMarkdown>
-      </WrapperChild>
+           {quantity}
+        </p> */}
+        {/* <ReactMarkdown>{price}</ReactMarkdown> */}
+      {/* </WrapperChild> */}
     </Wrapper>
-  );
+ ); 
 }
 
-const Wrapper = styled.section`
-  max-width: 1000px;
+ const Wrapper = styled.section`
+  max-width: 500px;
   margin: 40px auto;
+  align-items: center;
   padding: 16px;
   display: flex;
   gap: 24px;
-`;
+ `;
 
-const WrapperChild = styled.div`
+ const WrapperChild = styled.div`
   flex: 1;
-`;
-
-export default NewProduct;
+ `;
+    
