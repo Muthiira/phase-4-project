@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-// import AddPerformance from "../pages/NewProduct";
 import { Switch, Route } from "react-router-dom";
 import NavBar from "./NavBar";
 import Login from "../pages/Login";
 import ProductList from "../pages/ProductList";
 import NewProduct from "../pages/NewProduct";
 import { useHistory } from "react-router";
+import Home from "./home";
 
 
 function App() {
@@ -52,21 +52,20 @@ function App() {
 
   return (
     <>
-      <NavBar user={user} setUser={setUser} />
+   <NavBar  user={user} setUser={setUser}/>
+      
       <main>
-        
          <Switch> 
-          {/* { addingPerformance ? */}
            <Route path="/new">
             <NewProduct onSaved={updateResults} defaultData={newUpdate}/>
            </Route> 
-             {/* : */}
-           <Route path="/">
+           <Route path="/products">
             <ProductList products={products} update={onUpdate}/>
-           </Route>  
-          {/* } */}
+           </Route> 
+           <Route path='/'>
+            <Home />
+           </Route>
          </Switch>
-         {/* <Button   type="button" onClick={() => setAddingPerformance(!addingPerformance)} >{addingPerformance ? "cancel" : "NewProduct"}</Button> */}
       </main>
     </>
   );

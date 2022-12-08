@@ -12,10 +12,14 @@ function NavBar({ user, setUser }) {
     });
   }
 
+  const styles = {
+    backgroundColor : 'lightgrey'
+  };
+
   return (
-    <Wrapper>
+    <Wrapper style={styles}>
       <Logo>
-        <Link to="/">Products</Link>
+        <Link to="/products">Products</Link>
       </Logo>
       <Nav>
         <Button as={Link} to="/new">
@@ -23,6 +27,9 @@ function NavBar({ user, setUser }) {
         </Button>
         <Button variant="outline" onClick={handleLogoutClick}>
           Logout
+        </Button>
+        <Button as={Link} to='/'>
+          Home
         </Button>
       </Nav>
     </Wrapper>

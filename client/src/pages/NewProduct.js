@@ -36,13 +36,13 @@ export default function NewProduct ({onSaved, defaultData }) {
         onSaved(updatedProduct);
         history.push("/");
 				console.log(updatedProduct);
-        history.push("/");
+        history.push("/products");
 			})
 		} else {
 			Post(formData).then(newProduct => {
 				setSaving(false);
         onSaved(newProduct);
-        history.push("/");
+        history.push("/products");
 				console.log(newProduct);
 
 			});
