@@ -1,4 +1,6 @@
 import ImageSlider from './ImageSlider'
+import { Button } from '../styles';
+import { Link } from "react-router-dom";
 const Home = () => {
 
 	const slides =[
@@ -38,6 +40,8 @@ return(
 			LET'S KEEP TRACK
 		</h1>
 		<p>Helps manage and keep track of products in store</p>
+
+		<Button as={Link} to="/products">Products</Button>
 	</div>
 
 </div>
